@@ -1,0 +1,144 @@
+https://towardsdatascience.com/creating-pdf-files-with-python-ad3ccadfae0f
+
+
+
+You might not get why we should use PDF format as a reporting tool while there are more advanced methods like dynamic dashboards. Your attitude is quite understandable, but here are a few ideas that might change your mind:
+PDF file format is global. It is one of the most common file formats in use today and extensively used in all areas.
+It is portable. Yes! PDF stands for Portable Document Format. You can move your files around without having to worry about any restrictions.
+It is a platform-independent tool. It is independent of the hardware and the operating system. You can create your pdf files in Windows and view them in a Macintosh or Unix.
+It can be used offline. You don’t even need an internet connection.
+The ease of generation. There are many different ways to create a PDF file. Our purpose is to learn how to do it with Python.
+Using PyFPDF
+PyFPDF is a small and compact PDF document generation library under Python. Admittedly, there are a lot of alternatives for creating a pdf in Python, but I prefer working with PyFPDF due to its simplicity.
+Let’s start with importing the “FPDF” package. If you don’t have it yet, please check this link to install it.
+python -m pip install fpdf # installation
+from fpdf import FPDF  # fpdf class
+We import the FPDF class from the “fpdf” package. FPDF is a PHP class that allows generating PDF files with pure PHP.
+Initially, we create a class to use the FPDF library. For the moment, we use the pass statement, which is a null operation.
+class PDF(FPDF):
+     pass # nothing happens when it is executed.
+After creating a class, it is time to create our first pdf page. First, we need to create an object of the PDF class.
+pdf = PDF()#pdf object
+The FPDF constructor has a few parameters that affect the result. The first of these is page orientation. It is possible to use different directions like “landscape” and “portrait.” The default value of orientation is portrait. If you want to change it to landscape, use “L” as orientation value. (It is case insensitive.)
+pdf=PDF(orientation='L') # landscape
+Secondly, you can change the unit of measurement if you prefer units in “centimeter,” “points,” or “inches.” The default value is “mm: millimeter.”
+pdf=PDF(unit='mm') #unit of measurement
+Finally, the last parameter is the page format. As you notice, the default value is “A4”. Other values are “A3”, “A5”, “Letter,” and “Legal.”
+pdf=PDF(format='A4') #page format. A4 is the default value of the format, you don't have to specify it.
+# full syntax
+PDF(orientation={'P'(def.) or 'L'}, measure{'mm'(def.),'cm','pt','in'}, format{'A4'(def.),'A3','A5','Letter','Legal')
+#default
+pdf = PDF(orientation='P', unit='mm', format='A4')
+For more information, you can check the original documentation here.
+Since we have our class, we can add a page and save the output.
+pdf.add_page()
+pdf.output('test.pdf','F')
+add.page function adds a new page to the document. PDF parameters that I mentioned above also valid for this feature. By the way, if you don’t add a page, class methods are not going to work.
+Here is our first empty PDF page.
+Image for post
+First PDF Page
+Let me give you a hint. If you want to check your pdf file, do not use a PDF reader for now. Because when you try to change the python codes it gives an error as follows;
+Image for post
+One reason we have this problem is that your PDF file is in use by another program. To remedy this situation, just use chrome or firefox as a PDF viewer.
+Coordinate Space and Drawing Lines
+PyFPDF is built on the coordinate space (x,y), and hence, we need to know necessary math skills such as adding, subtracting :)
+As I said before, the default value of orientation is ‘A4’. So we need to know the size of A4 (w:210 mm and h:297 mm). Let’s assign these dimensions to variables for later use.
+pdf_w=210
+pdf_h=297
+We are ready to do something different. Let’s draw a line in the middle of the page. But first, we need to create a method within our class.
+class PDF(FPDF):
+    def lines(self):
+        self.set_line_width(0.0)
+        self.line(0,pdf_h/2,210,pdf_h/2)
+The lines method has two lines of code. In the first line of code, we set the line width to 0.0 mm. In the other one, we draw a simple line via the “line” function. This function has four arguments.
+line(x1,y1,x2,y2)
+x1 and y1 are points of origin. As you may have guessed, x2 and y2 are the endpoints that we need to specify. In our case, x1 is equal to zero, which means we want to start from the left-most side of the paper.
+Image for post
+Easy, right? Let’s use the lines to draw a rectangle. This time we need four different line functions.
+class PDF(FPDF):
+    def lines(self):
+        self.set_line_width(0.0)
+        self.line(5.0,5.0,205.0,5.0) # top one
+        self.line(5.0,292.0,205.0,292.0) # bottom one
+        self.line(5.0,5.0,5.0,292.0) # left one
+        self.line(205.0,5.0,205.0,292.0) # right one
+Image for post
+Even though line functions can be used to draw a rectangle, there is another function to draw a rectangle.
+class PDF(FPDF):
+    def lines(self):
+        self.rect(5.0, 5.0, 200.0,287.0)
+The “rect” function has four different variables. But this is not the same as the line function.
+rect( x: float, y:float, w:float, h:float, style='')
+x is the abscissa of the upper left corner, y ordinate of the top left, ‘w’ is the width of the rectangle, and ‘h’ is the height of the rectangle. The style parameter is essential if you want to fill in rectangular. ‘D’ is the default style value. ‘F’ stands for fill, and ‘FD’ or ‘DF’ stands for fill and draw.
+class PDF(FPDF):
+    def lines(self):
+        self.rect(5.0, 5.0, 200.0,287.0)
+        self.rect(8.0, 8.0, 194.0,282.0)
+Image for post
+Ok, by now you’ve learned how to draw a line and a rectangle. Let’s fill the outermost rectangle with RGB values. (Don’t forget the ‘FD’ or ‘DF’ arguments to fill in.)
+class PDF(FPDF):
+    def lines(self):
+        self.set_fill_color(32.0, 47.0, 250.0) # color for outer rectangle
+        self.rect(5.0, 5.0, 200.0,287.0,'DF')
+        self.set_fill_color(255, 255, 255) # color for inner rectangle
+        self.rect(8.0, 8.0, 194.0,282.0,'FD')
+Now that we have our template created.
+Image for post
+Adding Images
+This time we are going to learn how to add images to our PDF page. Let’s start by creating another function within our class.
+def imagex(self):
+        self.set_xy(6.0,6.0)
+        self.image(sctplt,  link='', type='', w=1586/80, h=1920/80)
+        self.set_xy(183.0,6.0)
+        self.image(sctplt2,  link='', type='', w=1586/80, h=1920/80)
+There are two different code lines. First of these is set_xy function, which defines the abscissa and ordinate of the current position. These are the starting points of the image. And the other one is the image function that puts an image on the page. In case you’re wondering about the parameters, please check this document.
+Image for post
+Lion Image by OpenClipart-Vectors from Pixabay
+Image for post
+Lion Image by OpenClipart-Vectors from Pixabay
+We can add a plot too.
+import plotly.express as px
+import plotly
+import os
+df = px.data.iris()
+pltx= px.scatter(df, x="sepal_width", y="sepal_length", color="species",
+                 size='petal_length', hover_data=['petal_width'])
+plotly.io.write_image(pltx,file='pltx.png',format='png',width=700, height=450)
+pltx=(os.getcwd()+'/'+"pltx.png")
+### define a method
+def charts(self):
+        self.set_xy(40.0,25.0)
+        self.image(plt,  link='', type='', w=700/5, h=450/5)
+Image for post
+Working with Text
+After we add the images, let’s create a title. By the way, do not forget to reset the index with another set_xy function. When you define a position, it remains constant until you change it with another set_xy function.
+def titles(self):
+        self.set_xy(0.0,0.0)
+        self.set_font('Arial', 'B', 16)
+        self.set_text_color(220, 50, 50)
+        self.cell(w=210.0, h=40.0, align='C', txt="LORD OF THE PDFS", border=0)
+We need to define a font via using set_font right before creating the text. This time we have only three parameters; ‘family,’ ‘style’ and ‘size.’ Standard fonts use Latin-1 encoding by default. So you could have problems such as encoding errors. If the problem persists, consider using the DejaVu font family.
+Image for post
+We could use a text file instead of a text. To do that, we need to use with statement as mentioned below.
+def texts(self,name):
+        with open(name,'rb') as xy:
+            txt=xy.read().decode('latin-1')
+        self.set_xy(10.0,80.0)    
+        self.set_text_color(76.0, 32.0, 250.0)
+        self.set_font('Arial', '', 12)
+        self.multi_cell(0,10,txt)
+Image for post
+oh, do not forget to set an author :)
+pdf.set_author('Eser SAYGIN')
+Recap
+PDF seems slightly old-school, but it still the most widely used tool for reporting, and it is still useful for many companies in the business world. In this article, we’ve learned how to create a basic pdf file using PyFPDF within Python. If all you need to generate useful and basic PDF, then this library might be right up your alley.
+Eser Saygın — Customer Segmentation Supervisor — Türkiye İş Bankası | LinkedIn
+Experienced Project Supervisor with a demonstrated history of working in the banking industry. Skilled in English…
+www.linkedin.com
+
+Useful Links
+https://pyfpdf.readthedocs.io/en/latest/index.html
+http://www.fpdf.org/
+https://github.com/reingart/pyfpdf
+Eser Saygın
+Strategic Data Analyst / Data Science Enthusiast
