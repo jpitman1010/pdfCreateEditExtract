@@ -1,0 +1,149 @@
+<DOCTYPE html>
+    <html>
+
+    <head>
+        <script src="https://code.jquery.com/jquery-3.5.1.js"
+            integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+        <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.2/FileSaver.min.js"
+            integrity="sha512-k8F8QynmFNURwbUJC8drKA+fo3YfNvjqKzStdydD6au+MzvxBoRnxH8E31RJXwDY9DrnEiPhh9wBoDSIxhkyHQ=="
+            crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.2/FileSaver.js"
+            integrity="sha512-Y36f1QBUtewxhuL8VzWzj6xgtHm4CTgYSdvW21mA6YZBduo6VjvGj79BKUhTqDU4xI9NpVMvCvOxByTsKlh1iQ=="
+            crossorigin="anonymous"></script>
+
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>
+            Create PDF
+        </title>
+        <style>
+            canvas#signature {
+                border: 2px solid black;
+            }
+
+            ;
+
+            form>* {}
+
+            ;
+
+            .reveal-if-active {
+                opacity: 0;
+                max-height: 0;
+                overflow: hidden;
+                font-size: 16px;
+                transform: scale(0.8);
+                transition: 0.5s;
+            }
+
+            .reveal-if-active label {
+                display: block;
+                margin: 0 0 3px 0;
+            }
+
+            .reveal-if-active input[type=text] {
+                width: 100%;
+            }
+
+            input[type=radio]:checked~.reveal-if-active,
+            input[type=checkbox]:checked~.reveal-if-active {
+                opacity: 1;
+                max-height: 100px;
+                padding: 10px 20px;
+                transform: scale(1);
+                overflow: visible;
+            }
+
+            form {
+                max-width: 500px;
+                margin: 20px auto;
+            }
+
+            form>div {
+                margin: 0 0 20px 0;
+            }
+
+            form>div label {
+                font-weight: bold;
+            }
+
+            form>div>div {
+                padding: 5px;
+            }
+
+            form>h4 {
+                color: green;
+                font-size: 24px;
+                margin: 0 0 10px 0;
+                border-bottom: 2px solid green;
+            }
+
+            body {
+                font-size: 20px;
+            }
+
+            * {
+                box-sizing: border-box;
+            }
+        </style>
+
+    </head>
+
+    <body style="text-align: center;">
+        <h2><b></b></h2>
+
+        <form method="post" action="#" style="text-align: center;">
+            <label class="label">Company Name <span style="color:red;">*</span></label><br><br>
+            <input type="text" name="companyName" id="name" class="input"><br><br>
+            <label class="label">Title of Document <span style="color:red">*</span></label><br><br>
+            <input type="text" name="title" id="referred_by" class="input"><br><br><br>
+            <div>
+                <div>
+                    <input type="radio" id="choice-textAreaInput" name="textAreaInput" value="textAreaInput" required>
+                    <label for="textAreaInput">Text Area Input (allows for information to be written into PDF)</label><br><br><br>
+                 
+                </div>
+               
+    
+
+     
+
+
+        <input type="radio" name="textInput" value="TextInput">
+        <label for="textAreaInput">Text Input (allows for fillable typed section for PDF)</label><br><br><br>
+        <input type="radio" name="checkBox" value="checkBox">
+        <label for="checkBox">Check Boxes (allows for multiple selections)</label><br><br><br>
+        <input type="radio" name="radioButton" value="radioButton">
+        <label for="radioButton">Radio Buttons (allows for single selection)</label><br><br><br><br>
+    </div>
+        <input type="submit" style="color:white;font-size:20px;border-radius: 1em;text-align: center;
+            background-image: linear-gradient(to right, #3725A8, blue);
+            padding-top:10px;padding-bottom: 10px; padding-left: 20px; padding-right:20px; ">
+
+        </form>
+        <form action="submit.php" onsubmit="return onSubmit(this)" method="post">
+            <div>
+                <input name="name" placeholder="Your name" required />
+            </div>
+            <div>
+                <canvas id="signature" width="300" height="100"></canvas>
+            </div>
+            <div>
+                <input type="hidden" name="signature" />
+            </div>
+            <button type="submit">Sign</button>
+    
+            <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
+            <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
+          
+            <!-- Load our React component. -->
+            <script src="like_button.js"></script>
+            <script src="signature.js"></script>
+            <script src="form.js"></script>
+
+
+    </html>
